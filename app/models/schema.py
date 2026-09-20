@@ -111,6 +111,8 @@ class VideoParams(BaseModel):
     video_concat_mode: Optional[VideoConcatMode] = VideoConcatMode.random.value
     video_transition_mode: Optional[VideoTransitionMode] = None
     video_clip_duration: int = Field(default=5, ge=1)
+    # 目标成片时长用于约束 AI 文案的长度；实际输出会随配音语速略有浮动。
+    video_target_duration: int = Field(default=60, ge=15, le=600)
     video_clip_speed: Optional[float] = 1.0
     match_materials_to_script: bool = False
     video_count: int = Field(default=1, ge=1)
@@ -206,6 +208,7 @@ class VideoScriptParams:
       "video_subject": "春天的花海",
       "video_language": "",
       "paragraph_number": 1,
+      "video_target_duration": 60,
       "video_script_prompt": "",
       "custom_system_prompt": ""
     }
@@ -214,6 +217,7 @@ class VideoScriptParams:
     video_subject: Optional[str] = "春天的花海"
     video_language: Optional[str] = ""
     paragraph_number: int = Field(default=1, ge=1, le=10)
+    video_target_duration: int = Field(default=60, ge=15, le=600)
     video_script_prompt: str = Field(default="", max_length=2000)
     custom_system_prompt: str = Field(default="", max_length=8000)
 
