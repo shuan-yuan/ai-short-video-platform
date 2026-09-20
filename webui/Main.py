@@ -5078,10 +5078,9 @@ def _render_video_settings(panel, params):
         with st.container(border=True):
             st.write(tr("Video Settings"))
             visual_style_options = [("真人", "realistic"), ("动漫", "anime"), ("动画", "animation"), ("插画", "illustration")]
-            params.video_visual_style = stable_selectbox(
+            params.video_visual_style = st.selectbox(
                 "画面风格",
                 options=[value for _, value in visual_style_options],
-                default_value="realistic",
                 key="video_visual_style_select",
                 format_func=lambda value: dict(visual_style_options)[value],
                 help="会影响 AI 生成的素材关键词。库存素材库不保证提供动漫、动画或插画画面；这三类建议搭配 AI 视频或 AI 图片来源。",
