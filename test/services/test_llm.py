@@ -145,6 +145,21 @@ class TestScriptPromptOptions(unittest.TestCase):
         self.assertLessEqual(len(result), 120)
         self.assertTrue(result.endswith("。"))
 
+    def test_generate_terms_includes_selected_visual_style(self):
+        captured = {}
+
+        def fake_generate_response(prompt):
+            captured["prompt"] = prompt
+            return '["anime city street"]'
+
+        with patch.object(llm, "_generate_response", side_effect=fake_generate_response):
+            terms = llm.generate_terms(
+                "城市故事", "一段城市故事。", amount=1, visual_style="anime"
+            )
+
+        self.assertEqual(terms, ["anime city street"])
+        self.assertIn("Japanese anime style", captured["prompt"])
+
     def test_generate_script_reuses_submitted_config_snapshot(self):
         """WebUI 后台任务结束后应用新配置，不能改变正在重试的模型请求。"""
         captured = {}
