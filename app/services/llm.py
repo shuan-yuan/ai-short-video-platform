@@ -701,6 +701,7 @@ def build_script_prompt(
     video_subject: str,
     language: str = "",
     paragraph_number: int = 1,
+    video_target_duration: int = 60,
     video_script_prompt: str = "",
     custom_system_prompt: str = "",
 ) -> str:
@@ -720,6 +721,8 @@ def build_script_prompt(
 # Initialization:
 - video subject: {video_subject}
 - number of paragraphs: {paragraph_number}
+- target video duration: approximately {video_target_duration} seconds
+- keep the narration concise enough to fit the target duration at a natural speaking pace
 """.rstrip()
     if language:
         prompt += f"\n- language: {language}"
@@ -737,6 +740,7 @@ def generate_script(
     video_subject: str,
     language: str = "",
     paragraph_number: int = 1,
+    video_target_duration: int = 60,
     video_script_prompt: str = "",
     custom_system_prompt: str = "",
     app_config=None,
@@ -752,6 +756,7 @@ def generate_script(
         video_subject=video_subject,
         language=language,
         paragraph_number=paragraph_number,
+        video_target_duration=video_target_duration,
         video_script_prompt=video_script_prompt,
         custom_system_prompt=custom_system_prompt,
     )
