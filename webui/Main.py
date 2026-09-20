@@ -4887,6 +4887,15 @@ def _render_script_settings(panel, params):
                     key="video_subject",
                     label_visibility="collapsed",
                 ).strip()
+                # 内容类型作为脚本提示前缀；保留输入框原主题，避免 Streamlit 重跑时重复拼接。
+                content_type = st.selectbox(
+                    "内容类型（可选）",
+                    options=["不限定", "知识类", "情感类", "财经类", "故事类", "资讯类", "解说类"],
+                    key="short_video_content_type",
+                    help="选择后会作为 AI 脚本提示的内容定位。财经与资讯内容请自行核验。",
+                )
+                if content_type != "不限定" and params.video_subject:
+                    params.video_subject = f"{content_type}：{params.video_subject}"
 
             video_languages = [
                 (tr("Auto Detect"), ""),
