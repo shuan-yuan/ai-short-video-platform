@@ -72,6 +72,7 @@ class TestTaskService(unittest.TestCase):
             video_script="",
             video_language="zh-CN",
             paragraph_number=2,
+            video_target_duration=45,
             video_script_prompt="语气轻松",
             custom_system_prompt="Only write short narration.",
         )
@@ -86,6 +87,7 @@ class TestTaskService(unittest.TestCase):
             video_subject="咖啡",
             language="zh-CN",
             paragraph_number=2,
+            video_target_duration=45,
             video_script_prompt="语气轻松",
             custom_system_prompt="Only write short narration.",
         )
