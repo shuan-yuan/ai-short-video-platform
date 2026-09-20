@@ -131,6 +131,20 @@ class TestScriptPromptOptions(unittest.TestCase):
         self.assertIn("- number of paragraphs: 2", captured["prompt"])
         self.assertIn("开头更有悬念", captured["prompt"])
 
+    def test_generate_script_trims_chinese_script_to_target_duration(self):
+        """目标时长不能只依赖模型服从提示，超长中文文案应按完整句子截短。"""
+        response = "".join(["这是一个完整的短句。" for _ in range(30)])
+
+        with patch.object(llm, "_generate_response", return_value=response):
+            result = llm.generate_script(
+                video_subject="测试",
+                language="zh-CN",
+                video_target_duration=30,
+            )
+
+        self.assertLessEqual(len(result), 120)
+        self.assertTrue(result.endswith("。"))
+
     def test_generate_script_reuses_submitted_config_snapshot(self):
         """WebUI 后台任务结束后应用新配置，不能改变正在重试的模型请求。"""
         captured = {}
