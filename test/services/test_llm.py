@@ -86,6 +86,7 @@ class TestScriptPromptOptions(unittest.TestCase):
         self.assertIn("# Role: Video Script Generator", prompt)
         self.assertIn("- video subject: 咖啡", prompt)
         self.assertIn("- number of paragraphs: 3", prompt)
+        self.assertIn("- target video duration: approximately 60 seconds", prompt)
         self.assertIn("- language: zh-CN", prompt)
         self.assertIn("# Additional User Requirements:", prompt)
         self.assertIn("语气轻松，面向程序员", prompt)
@@ -106,6 +107,7 @@ class TestScriptPromptOptions(unittest.TestCase):
         self.assertIn("Only write cinematic narration.", prompt)
         self.assertIn("- video subject: 露营", prompt)
         self.assertIn("- number of paragraphs: 2", prompt)
+        self.assertIn("- target video duration: approximately 60 seconds", prompt)
         self.assertIn("- language: en", prompt)
 
     def test_generate_script_sends_custom_prompt_to_llm(self):
