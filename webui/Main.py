@@ -4896,6 +4896,17 @@ def _render_script_settings(panel, params):
                 )
                 if content_type != "不限定" and params.video_subject:
                     params.video_subject = f"{content_type}：{params.video_subject}"
+                st.session_state.setdefault("video_target_duration", 60)
+                params.video_target_duration = int(
+                    st.number_input(
+                        "成片目标时长（秒）",
+                        min_value=15,
+                        max_value=600,
+                        step=15,
+                        key="video_target_duration",
+                        help="AI 会按此时长控制脚本文字量；实际成片时长会受配音语速影响。",
+                    )
+                )
 
             video_languages = [
                 (tr("Auto Detect"), ""),
@@ -5001,10 +5012,11 @@ def _render_script_settings(panel, params):
                     ):
                         render_script_prompt_preview(
                             llm.build_script_prompt(
-                                video_subject=params.video_subject,
-                                language=params.video_language,
-                                paragraph_number=params.paragraph_number,
-                                video_script_prompt=params.video_script_prompt,
+                video_subject=params.video_subject,
+                language=params.video_language,
+                paragraph_number=params.paragraph_number,
+                video_target_duration=params.video_target_duration,
+                video_script_prompt=params.video_script_prompt,
                                 custom_system_prompt=params.custom_system_prompt,
                             )
                         )
