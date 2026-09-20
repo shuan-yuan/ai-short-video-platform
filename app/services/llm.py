@@ -736,6 +736,46 @@ def build_script_prompt(
     return prompt
 
 
+def _trim_script_to_target_duration(
+    script: str, target_duration: int, language: str
+) -> str:
+    """Keep CJK narration close to the requested duration at natural TTS speed.
+
+    A prompt alone cannot guarantee an LLM follows a time budget. Chinese narration
+    is normally spoken at roughly four characters per second, so trim only when a
+    generated CJK script exceeds that budget and always prefer a complete sentence.
+    """
+    text = (script or "").strip()
+    is_cjk = (language or "").lower().startswith(("zh", "ja", "ko")) or bool(
+        re.search(r"[\u4e00-\u9fff]", text)
+    )
+    if not is_cjk:
+        return text
+
+    limit = max(30, min(int(target_duration), 600) * 4)
+    if len(text) <= limit:
+        return text
+
+    sentences = [part.strip() for part in re.split(r"(?<=[。！？!?])", text) if part.strip()]
+    kept = []
+    length = 0
+    for sentence in sentences:
+        if kept and length + len(sentence) > limit:
+            break
+        if not kept and len(sentence) > limit:
+            kept.append(sentence[:limit].rstrip("，、；： ") + "。")
+            break
+        kept.append(sentence)
+        length += len(sentence)
+
+    trimmed = "".join(kept).strip()
+    logger.info(
+        "trimmed CJK script to target duration: "
+        f"target={target_duration}s, characters={len(text)}->{len(trimmed)}"
+    )
+    return trimmed or text[:limit].rstrip("，、；： ") + "。"
+
+
 def generate_script(
     video_subject: str,
     language: str = "",
@@ -805,6 +845,9 @@ def generate_script(
                 raise ValueError(final_script)
 
             if final_script:
+                final_script = _trim_script_to_target_duration(
+                    final_script, video_target_duration, language
+                )
                 break
         except Exception as e:
             logger.error(f"failed to generate script: {e}")
