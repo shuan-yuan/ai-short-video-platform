@@ -55,6 +55,7 @@ class VideoFitMode(str, Enum):
 
 SubtitleDisplayMode = Literal["sentence", "word_by_word"]
 SubtitleAnimation = Literal["none", "pop_spring"]
+VideoVisualStyle = Literal["realistic", "anime", "animation", "illustration"]
 _SUBTITLE_DISPLAY_MODES = ("sentence", "word_by_word")
 _SUBTITLE_ANIMATIONS = ("none", "pop_spring")
 
@@ -118,6 +119,7 @@ class VideoParams(BaseModel):
     video_count: int = Field(default=1, ge=1)
 
     video_source: Optional[str] = "pexels"
+    video_visual_style: VideoVisualStyle = "realistic"
     video_materials: Optional[List[MaterialInfo]] = (
         None  # Materials used to generate the video
     )
