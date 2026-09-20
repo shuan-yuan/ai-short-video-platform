@@ -882,6 +882,7 @@ def generate_terms(
     video_script: str,
     amount: int = 5,
     match_script_order: bool = False,
+    visual_style: str = "realistic",
     app_config=None,
 ) -> List[str]:
     video_script = utils.remove_pause_tags(video_script or "").strip()
@@ -913,6 +914,13 @@ def generate_terms(
             '"search term 4", "search term 5"]'
         )
 
+    visual_style_instructions = {
+        "realistic": "live-action, photorealistic real-world footage",
+        "anime": "Japanese anime style, cel-shaded characters and scenery",
+        "animation": "stylized animated scene, non-photorealistic motion graphics",
+        "illustration": "editorial illustration, hand-drawn artwork",
+    }
+    selected_style = visual_style_instructions.get(visual_style, visual_style_instructions["realistic"])
     prompt = f"""
 # Role: Video Search Terms Generator
 
@@ -925,6 +933,7 @@ def generate_terms(
 3. you must only return the json-array of strings. you must not return anything else. you must not return the script.
 4. the search terms must be related to the subject of the video.
 5. reply with english search terms only.
+6. every search term must reflect this visual style: {selected_style}.
 {ordering_rule}
 
 ## Output Example:
